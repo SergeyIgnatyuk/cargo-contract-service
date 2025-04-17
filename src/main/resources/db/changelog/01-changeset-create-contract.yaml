@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-contract-01
+      author: sergey_ignatyuk
+      dbms: postgresql
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: contract
+      changes:
+        - createTable:
+            tableName: contract
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: status
+                  type: varchar(55)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(55)
+                  constraints:
+                    unique: true
+                    nullable: false
