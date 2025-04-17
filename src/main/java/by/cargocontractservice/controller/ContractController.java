@@ -23,7 +23,7 @@ public class ContractController {
     }
 
     @GetMapping("/{name}")
-    @Operation(summary = "Получить информацию об контракте по имени")
+    @Operation(summary = "Получить информацию об контракте по названию")
     public Contract getContractByName(@PathVariable String name) {
         return contractRepository.findByName(name).orElseThrow();
     }
@@ -43,7 +43,7 @@ public class ContractController {
     }
 
     @DeleteMapping("/{name}")
-    @Operation(summary = "Удалить контракт по имени")
+    @Operation(summary = "Удалить контракт по названию")
     public void deleteContract(@PathVariable String name) {
         contractRepository.deleteByName(name);
     }
