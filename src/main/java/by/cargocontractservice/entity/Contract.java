@@ -20,8 +20,7 @@ import java.util.UUID;
 public class Contract {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
@@ -46,6 +45,6 @@ public class Contract {
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(nullable = false, insertable = false)
+    @Column(insertable = false)
     private LocalDateTime updatedAt;
 }

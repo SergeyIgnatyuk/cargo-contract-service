@@ -14,8 +14,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: int
-                  autoIncrement: true
+                  type: uuid
                   constraints:
                     primaryKey: true
               - column:
@@ -46,8 +45,6 @@ databaseChangeLog:
               - column:
                   name: updated_at
                   type: timestamp
-                  constraints:
-                    nullable: false
               - column:
                   name: status
                   type: varchar(55)
