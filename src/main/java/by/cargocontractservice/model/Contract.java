@@ -17,7 +17,6 @@ public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    @JsonProperty
     private Long id;
     @Column(nullable = false)
     @JsonProperty
