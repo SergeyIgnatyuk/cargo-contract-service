@@ -1,40 +1,46 @@
 package by.cargocontractservice.service;
 
-import by.cargocontractservice.model.Contract;
-import by.cargocontractservice.model.Status;
+import by.cargocontractservice.dto.ContractDto;
+import by.cargocontractservice.entity.Contract;
+import by.cargocontractservice.entity.Status;
 import by.cargocontractservice.repository.ContractRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import by.cargocontractservice.mapper.ContractMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ContractService {
 
     private final ContractRepository contractRepository;
+    private final ContractMapper contractMapper;
 
-    public List<Contract> getAllContracts() {
-        return contractRepository.findAll();
+    public List<ContractDto> getAllContracts() {
+        return contractMapper.toContractDtos(contractRepository.findAll());
     }
 
-    public Contract getContractByName(String name) {
-        return contractRepository.findByName(name).orElseThrow(() -> new RuntimeException("The contract is not found"));
+    public ContractDto getContractById(UUID id) {
+        Contract contract = contractRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("The contract has been not found"));
+        return contractMapper.toContractDto(contract);
     }
 
-    public void createContract(Contract contract) {
-        contractRepository.save(contract);
+    public void createContract(ContractDto contract) {
+        contractRepository.save(contractMapper.toContract(contract));
     }
 
     @Transactional
-    public Contract updateContractStatus(String name, Status status) {
-        Contract contract = contractRepository.findByName(name).orElseThrow();
+    public ContractDto updateContractStatus(UUID id, Status status) {
+        Contract contract = contractRepository.findById(id).orElseThrow();
         contract.setStatus(status);
-        return contractRepository.save(contract);
+        return contractMapper.toContractDto(contractRepository.save(contract));
     }
 
-    public void deleteContractByName(String name) {
-        contractRepository.deleteByName(name);
+    public void deleteContractById(UUID id) {
+        contractRepository.deleteById(id);
     }
 }

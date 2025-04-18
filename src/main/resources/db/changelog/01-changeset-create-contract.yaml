@@ -19,13 +19,37 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: status
-                  type: varchar(55)
+                  name: customer_name
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
-                  name: name
+                  name: loading_info
+                  type: text
+              - column:
+                  name: deliveryInfo
+                  type: text
+              - column:
+                  name: cargo_type
+                  type: varchar(55)
+              - column:
+                  name: cargo_weight
+                  type: varchar(55)
+              - column:
+                  name: price
+                  type: numeric
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
                   type: varchar(55)
                   constraints:
-                    unique: true
                     nullable: false

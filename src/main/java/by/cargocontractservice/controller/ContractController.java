@@ -1,7 +1,7 @@
 package by.cargocontractservice.controller;
 
-import by.cargocontractservice.model.Contract;
-import by.cargocontractservice.model.Status;
+import by.cargocontractservice.dto.ContractDto;
+import by.cargocontractservice.entity.Status;
 import by.cargocontractservice.service.ContractService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/contracts")
@@ -20,32 +22,32 @@ public class ContractController {
 
     @GetMapping
     @Operation(summary = "Получить информацию обо всех контрактах")
-    public Iterable<Contract> getAllContracts() {
+    public Iterable<ContractDto> getAllContracts() {
         return contractService.getAllContracts();
     }
 
-    @GetMapping("/{name}")
-    @Operation(summary = "Получить информацию об контракте по названию")
-    public Contract getContractByName(@PathVariable String name) {
-        return contractService.getContractByName(name);
+    @GetMapping("/{id}")
+    @Operation(summary = "Получить информацию об контракте по ID")
+    public ContractDto getContractByName(@PathVariable UUID id) {
+        return contractService.getContractById(id);
     }
 
     @PostMapping
     @Operation(summary = "Создать новый контракт")
-    public ResponseEntity<String> createContract(@RequestBody Contract contract) {
+    public ResponseEntity<String> createContract(@RequestBody ContractDto contract) {
         contractService.createContract(contract);
         return new ResponseEntity<>("Contract has been created", HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{name}")
+    @PatchMapping("/{id}")
     @Operation(summary = "Обновить статус контракта")
-    public Contract updateContractStatus(@PathVariable String name, @RequestParam Status status) {
-        return contractService.updateContractStatus(name, status);
+    public ContractDto updateContractStatus(@PathVariable UUID id, @RequestParam Status status) {
+        return contractService.updateContractStatus(id, status);
     }
 
-    @DeleteMapping("/{name}")
-    @Operation(summary = "Удалить контракт по названию")
-    public void deleteContract(@PathVariable String name) {
-        contractService.deleteContractByName(name);
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Удалить контракт по ID")
+    public void deleteContract(@PathVariable UUID id) {
+        contractService.deleteContractById(id);
     }
 }

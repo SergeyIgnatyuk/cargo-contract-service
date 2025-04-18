@@ -1,4 +1,4 @@
-package by.cargocontractservice.model;
+package by.cargocontractservice.entity;
 
 
 public enum Status {
