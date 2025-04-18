@@ -27,7 +27,7 @@ databaseChangeLog:
                   name: loading_info
                   type: text
               - column:
-                  name: deliveryInfo
+                  name: delivery_info
                   type: text
               - column:
                   name: cargo_type
