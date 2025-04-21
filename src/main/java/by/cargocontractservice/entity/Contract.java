@@ -1,5 +1,6 @@
 package by.cargocontractservice.entity;
 
+import by.cargocontractservice.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

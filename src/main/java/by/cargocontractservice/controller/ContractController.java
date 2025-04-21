@@ -1,7 +1,7 @@
 package by.cargocontractservice.controller;
 
 import by.cargocontractservice.dto.ContractDto;
-import by.cargocontractservice.entity.Status;
+import by.cargocontractservice.enums.Status;
 import by.cargocontractservice.service.ContractService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

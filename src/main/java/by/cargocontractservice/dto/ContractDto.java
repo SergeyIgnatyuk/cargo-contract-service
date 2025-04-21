@@ -1,6 +1,6 @@
 package by.cargocontractservice.dto;
 
-import by.cargocontractservice.entity.Status;
+import by.cargocontractservice.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

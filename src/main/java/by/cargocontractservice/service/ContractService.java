@@ -2,7 +2,7 @@ package by.cargocontractservice.service;
 
 import by.cargocontractservice.dto.ContractDto;
 import by.cargocontractservice.entity.Contract;
-import by.cargocontractservice.entity.Status;
+import by.cargocontractservice.enums.Status;
 import by.cargocontractservice.repository.ContractRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
