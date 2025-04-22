@@ -1,12 +1,13 @@
 package by.cargocontractservice.service;
 
+import by.cargocontractservice.client.LogisticBpClient;
 import by.cargocontractservice.dto.ContractDto;
 import by.cargocontractservice.entity.Contract;
 import by.cargocontractservice.enums.Status;
+import by.cargocontractservice.mapper.ContractMapper;
 import by.cargocontractservice.repository.ContractRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import by.cargocontractservice.mapper.ContractMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class ContractService {
 
     private final ContractRepository contractRepository;
     private final ContractMapper contractMapper;
+    private final LogisticBpClient logisticBpClient;
 
     public List<ContractDto> getAllContracts() {
         return contractMapper.toContractDtos(contractRepository.findAll());
@@ -29,8 +31,9 @@ public class ContractService {
         return contractMapper.toContractDto(contract);
     }
 
-    public void createContract(ContractDto contract) {
-        contractRepository.save(contractMapper.toContract(contract));
+    public void createContract(ContractDto contractDto) {
+        Contract contract = contractRepository.save(contractMapper.toContract(contractDto));
+        logisticBpClient.createContract(contractMapper.toCreateContractDto(contract));
     }
 
     @Transactional

@@ -1,7 +1,6 @@
 package by.cargocontractservice.dto;
 
 import by.cargocontractservice.enums.Status;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

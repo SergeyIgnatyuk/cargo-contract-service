@@ -1,8 +1,12 @@
 package by.cargocontractservice.mapper;
 
 import by.cargocontractservice.dto.ContractDto;
+import by.cargocontractservice.dto.CreateContractDto;
 import by.cargocontractservice.entity.Contract;
+import by.cargocontractservice.enums.Status;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
 
@@ -16,4 +20,13 @@ public interface ContractMapper {
     List<ContractDto> toContractDtos(List<Contract> contracts);
 
     Contract toContract(ContractDto contractDto);
+
+    @Mapping(target = "status", source = "status", qualifiedByName = "mapStatus")
+    CreateContractDto toCreateContractDto(Contract contract);
+
+    @Named("mapStatus")
+    default String mapStatus(Status status) {
+        return status.name();
+    }
 }
+
