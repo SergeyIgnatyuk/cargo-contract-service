@@ -76,7 +76,7 @@ public class FeignConfiguration {
                 .decoder(decoder)
                 .queryMapEncoder(queryMapEncoder)
                 .logger(new Slf4jLogger(LogisticBpClient.class))
-                .target(LogisticBpClient.class, "http://localhost:8081/logistic/contract");
+                .target(LogisticBpClient.class, "http://logistic-bp/logistic:8081/contract");
     }
 
 }
