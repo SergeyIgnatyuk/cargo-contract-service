@@ -36,7 +36,7 @@ databaseChangeLog:
                   type: varchar(55)
               - column:
                   name: price
-                  type: numeric
+                  type: float
               - column:
                   name: created_at
                   type: timestamp
