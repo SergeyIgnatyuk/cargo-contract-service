@@ -39,7 +39,7 @@ public class ContractController {
         return new ResponseEntity<>("Contract has been created", HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
+    @PostMapping("/{id}")
     @Operation(summary = "Обновить статус контракта")
     public ContractDto updateContractStatus(@PathVariable UUID id, @RequestParam Status status) {
         return contractService.updateContractStatus(id, status);

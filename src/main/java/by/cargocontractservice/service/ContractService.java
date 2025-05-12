@@ -6,6 +6,7 @@ import by.cargocontractservice.entity.Contract;
 import by.cargocontractservice.enums.Status;
 import by.cargocontractservice.mapper.ContractMapper;
 import by.cargocontractservice.repository.ContractRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,15 @@ public class ContractService {
         return contractMapper.toContractDtos(contractRepository.findAll());
     }
 
+    @CircuitBreaker(name = "cargoContractService")
     public ContractDto getContractById(UUID id) {
         Contract contract = contractRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("The contract has been not found"));
         return contractMapper.toContractDto(contract);
     }
 
+    @CircuitBreaker(name = "logisticBp")
+    @Transactional
     public void createContract(ContractDto contractDto) {
         Contract contract = contractRepository.save(contractMapper.toContract(contractDto));
         logisticBpClient.createContract(contractMapper.toCreateContractDto(contract));
