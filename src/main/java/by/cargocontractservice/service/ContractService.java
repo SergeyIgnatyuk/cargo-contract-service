@@ -4,6 +4,7 @@ import by.cargocontractservice.client.LogisticBpClient;
 import by.cargocontractservice.dto.ContractDto;
 import by.cargocontractservice.entity.Contract;
 import by.cargocontractservice.enums.Status;
+import by.cargocontractservice.event.KafkaMessageProducer;
 import by.cargocontractservice.mapper.ContractMapper;
 import by.cargocontractservice.repository.ContractRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -21,6 +22,7 @@ public class ContractService {
     private final ContractRepository contractRepository;
     private final ContractMapper contractMapper;
     private final LogisticBpClient logisticBpClient;
+    private final KafkaMessageProducer producer;
 
     public List<ContractDto> getAllContracts() {
         return contractMapper.toContractDtos(contractRepository.findAll());
@@ -44,6 +46,7 @@ public class ContractService {
     public ContractDto updateContractStatus(UUID id, Status status) {
         Contract contract = contractRepository.findById(id).orElseThrow();
         contract.setStatus(status);
+        producer.sendObjectMessage(status.name());
         return contractMapper.toContractDto(contractRepository.save(contract));
     }
 

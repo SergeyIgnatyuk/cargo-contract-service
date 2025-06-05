@@ -1,8 +1,6 @@
 package by.cargocontractservice.entity;
 
-import by.cargocontractservice.enums.Status;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -19,32 +19,23 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table
-public class Contract {
+public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(unique = true)
-    private UUID processId;
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Organization customer;
-
-    private String loadingInfo;
-
-    private String deliveryInfo;
-
-    private String cargoType;
-
-    private String cargoWeight;
-
-    private Double price;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status status;
+    private String name;
+
+    @Column(nullable = false)
+    private String fullName;
+
+    @Column(nullable = false)
+    private String tin;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Contract> contracts = new ArrayList<>();
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

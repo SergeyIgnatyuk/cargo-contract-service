@@ -11,5 +11,4 @@ public class CargoContractServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(CargoContractServiceApplication.class, args);
     }
-
 }

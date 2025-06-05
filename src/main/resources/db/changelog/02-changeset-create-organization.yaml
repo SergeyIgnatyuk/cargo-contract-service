@@ -1,16 +1,16 @@
 databaseChangeLog:
   - changeSet:
-      id: create-contract-01
+      id: create-organization-02
       author: sergey_ignatyuk
       dbms: postgresql
       preConditions:
         - onFail: MARK_RAN
         - not:
             - tableExists:
-                tableName: contract
+                tableName: organization
       changes:
         - createTable:
-            tableName: contract
+            tableName: organization
             columns:
               - column:
                   name: id
@@ -18,25 +18,20 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: customer_id
-                  type: uuid
+                  name: name
+                  type: text
                   constraints:
                     nullable: false
               - column:
-                  name: loading_info
+                  name: full_name
                   type: text
+                  constraints:
+                    nullable: false
               - column:
-                  name: delivery_info
-                  type: text
-              - column:
-                  name: cargo_type
-                  type: varchar(55)
-              - column:
-                  name: cargo_weight
-                  type: varchar(55)
-              - column:
-                  name: price
-                  type: float
+                  name: tin
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
                   type: timestamp
@@ -45,11 +40,3 @@ databaseChangeLog:
               - column:
                   name: updated_at
                   type: timestamp
-              - column:
-                  name: status
-                  type: varchar(55)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: process_id
-                  type: uuid
