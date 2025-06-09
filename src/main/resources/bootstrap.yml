@@ -2,4 +2,4 @@ spring:
   application:
     name: cargo-contract-service
   config:
-    import: configserver:http://localhost:8071
+    import: configserver:http://logistic-configserver:8071
