@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # Базы данных
   logistic-db:
     image: postgres
     container_name: logistic-db
@@ -19,7 +20,29 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 10s
 
+  logistic-camunda-db:
+    image: postgres
+    container_name: logistic-camunda-db
+    networks:
+      - backend
+    environment:
+      POSTGRES_DB: camunda
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - camundastorage:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Инфраструктурные сервисы
   logistic-zookeeper:
     image: wurstmeister/zookeeper:latest
     container_name: logistic-zookeeper
@@ -29,6 +52,11 @@ services:
       - "2181:2181"
     volumes:
       - zoostorage:/data
+    healthcheck:
+      test: ["CMD", "echo", "ruok | nc", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   logistic-kafka:
     image: wurstmeister/kafka:latest
@@ -47,13 +75,116 @@ services:
     volumes:
       - kafkastorage:/kafka
     depends_on:
-      - logistic-zookeeper
+      logistic-zookeeper:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "kafka-broker-api-versions.sh", "--bootstrap-server", "localhost:9092"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 20s
 
+  # Сервисы Spring Cloud
+  logistic-configserver:
+    image: sergeyignatyuk/logistic-configserver:latest
+    container_name: logistic-configserver
+    networks:
+      - backend
+    ports:
+      - "8071:8071"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8071/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  logistic-discoveryserver:
+    image: sergeyignatyuk/logistic-discoveryserver:latest
+    container_name: logistic-discoveryserver
+    networks:
+      - backend
+    ports:
+      - "8070:8070"
+    depends_on:
+      logistic-configserver:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8070/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  logistic-gatewayserver:
+    image: sergeyignatyuk/logistic-gatewayserver:latest
+    container_name: logistic-gatewayserver
+    networks:
+      - backend
+    ports:
+      - "8072:8072"
+    depends_on:
+      logistic-configserver:
+        condition: service_healthy
+      logistic-discoveryserver:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8072/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 25s
+
+  # Прикладные сервисы
+  cargo-contract-service:
+    image: sergeyignatyuk/cargo-contract-service:latest
+    container_name: cargo-contract-service
+    networks:
+      - backend
+    ports:
+      - "8082:8082"
+    depends_on:
+      logistic-db:
+        condition: service_healthy
+      logistic-kafka:
+        condition: service_healthy
+      logistic-configserver:
+        condition: service_healthy
+      logistic-discoveryserver:
+        condition: service_healthy
+      logistic-gatewayserver:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  logistic-bp:
+    image: sergeyignatyuk/logistic-bp:latest
+    container_name: logistic-bp
+    networks:
+      - backend
+    ports:
+      - "8081:8081"
+    depends_on:
+      logistic-camunda-db:
+        condition: service_healthy
+      logistic-configserver:
+        condition: service_healthy
+      logistic-discoveryserver:
+        condition: service_healthy
+      logistic-gatewayserver:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 35s
+
+  # Вспомогательные сервисы
   logistic-kafka-ui:
     image: obsidiandynamics/kafdrop
     container_name: logistic-kafka-ui
@@ -66,23 +197,6 @@ services:
       JVM_OPTS: "-Xms32M -Xmx64M"
       SERVER_SERVLET_CONTEXT_PATH: "/"
     depends_on:
-      - logistic-kafka
-
-  cargo-contract-service:
-    image: sergeyignatyuk/cargo-contract-service:latest
-    container_name: cargo-contract-service
-    networks:
-      - backend
-    ports:
-      - "8082:8082"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://logistic-db:5432/logistic
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: logistic-kafka:9092
-    depends_on:
-      logistic-db:
-        condition: service_healthy
       logistic-kafka:
         condition: service_healthy
 
@@ -92,5 +206,6 @@ networks:
 
 volumes:
   logisticstorage:
+  camundastorage:
   zoostorage:
   kafkastorage:
