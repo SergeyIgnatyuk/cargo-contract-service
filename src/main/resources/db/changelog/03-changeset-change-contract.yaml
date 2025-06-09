@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-organization-02
+      author: sergey_ignatyuk
+      dbms: postgresql
+      preConditions:
+        - onFail: MARK_RAN
+        - columnExists:
+                tableName: contract
+                columnName: process_id
+      changes:
+        - dropColumn:
+            tableName: contract
+            columnName: process_id

@@ -28,7 +28,7 @@ public class ContractController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Получить информацию об контракте по ID")
-    public ContractDto getContractByName(@PathVariable UUID id) {
+    public ContractDto getContractById(@PathVariable UUID id) {
         return contractService.getContractById(id);
     }
 

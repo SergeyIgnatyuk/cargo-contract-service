@@ -25,11 +25,8 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(unique = true)
-    private UUID processId;
-
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
     private Organization customer;
 
     private String loadingInfo;

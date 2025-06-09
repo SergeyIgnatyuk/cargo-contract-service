@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       file: 02-changeset-create-organization.yaml
       relativeToChangelogFile: true
+  - include:
+      file: 03-changeset-change-contract.yaml
+      relativeToChangelogFile: true

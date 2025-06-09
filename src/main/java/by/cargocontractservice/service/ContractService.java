@@ -7,20 +7,23 @@ import by.cargocontractservice.enums.Status;
 import by.cargocontractservice.event.KafkaMessageProducer;
 import by.cargocontractservice.mapper.ContractMapper;
 import by.cargocontractservice.repository.ContractRepository;
+import by.cargocontractservice.repository.OrganizationRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ContractService {
 
-    private final ContractRepository contractRepository;
     private final ContractMapper contractMapper;
+    private final ContractRepository contractRepository;
+    private final OrganizationRepository organizationRepository;
     private final LogisticBpClient logisticBpClient;
     private final KafkaMessageProducer producer;
 
@@ -38,8 +41,13 @@ public class ContractService {
     @CircuitBreaker(name = "logisticBp")
     @Transactional
     public void createContract(ContractDto contractDto) {
-        Contract contract = contractRepository.save(contractMapper.toContract(contractDto));
-        logisticBpClient.createContract(contractMapper.toCreateContractDto(contract));
+        Contract contract = contractMapper.toContract(contractDto);
+        organizationRepository.findByName(contractDto.getCustomerName())
+                .ifPresentOrElse(contract::setCustomer, () -> {
+                    throw new NoSuchElementException("Organization not found");
+                });
+        Contract result = contractRepository.save(contract);
+        logisticBpClient.createContract(contractMapper.toCreateContractDto(result));
     }
 
     @Transactional

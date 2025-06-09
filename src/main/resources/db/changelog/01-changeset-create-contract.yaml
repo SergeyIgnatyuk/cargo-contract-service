@@ -20,8 +20,6 @@ databaseChangeLog:
               - column:
                   name: customer_id
                   type: uuid
-                  constraints:
-                    nullable: false
               - column:
                   name: loading_info
                   type: text

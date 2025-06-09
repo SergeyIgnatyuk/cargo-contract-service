@@ -34,7 +34,7 @@ public class Organization {
     @Column(nullable = false)
     private String tin;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contract> contracts = new ArrayList<>();
 
     @CreationTimestamp
