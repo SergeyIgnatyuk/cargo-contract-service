@@ -14,7 +14,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - logisticstorage:/var/lib/postgresql/data
+      - logisticstorage:/var/lib/postgresql/logistic/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -34,7 +34,7 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - camundastorage:/var/lib/postgresql/data
+      - camundastorage:/var/lib/postgresql/camunda/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
