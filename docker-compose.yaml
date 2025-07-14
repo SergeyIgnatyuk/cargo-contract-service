@@ -42,6 +42,26 @@ services:
       retries: 5
       start_period: 10s
 
+  logistic-keycloak-db:
+    image: postgres
+    container_name: logistic-keycloak-db
+    networks:
+      - backend
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - keykloakstorage:/var/lib/postgresql/keycloak/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   # Инфраструктурные сервисы
   logistic-zookeeper:
     image: wurstmeister/zookeeper:latest
@@ -184,6 +204,27 @@ services:
       timeout: 5s
       retries: 5
       start_period: 35s
+
+  logistic-keycloak:
+    image: keycloak/keycloak:latest
+    container_name: logistic-keycloak
+    networks:
+      - backend
+    ports:
+      - "8080:8080"
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: logistic-keycloak-db
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KC_HOSTNAME: localhost
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    depends_on:
+      logistic-keycloak-db:
+        condition: service_healthy
+    command: start-dev
 
   # Вспомогательные сервисы
   logistic-kafka-ui:
