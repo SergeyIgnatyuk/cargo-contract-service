@@ -54,7 +54,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - keykloakstorage:/var/lib/postgresql/keycloak/data
+      - keycloakstorage:/var/lib/postgresql/keycloak/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
@@ -249,5 +249,6 @@ networks:
 volumes:
   logisticstorage:
   camundastorage:
+  keycloakstorage:
   zoostorage:
   kafkastorage:
