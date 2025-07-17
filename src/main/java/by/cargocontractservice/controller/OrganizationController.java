@@ -1,8 +1,6 @@
 package by.cargocontractservice.controller;
 
-import by.cargocontractservice.dto.ContractDto;
 import by.cargocontractservice.dto.OrganizationDto;
-import by.cargocontractservice.enums.Status;
 import by.cargocontractservice.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,7 +20,7 @@ public class OrganizationController {
     private final OrganizationService organizationService;
 
     @GetMapping
-    @Operation(summary = "Получить информацию обо всех организациях[")
+    @Operation(summary = "Получить информацию обо всех организациях")
     public Iterable<OrganizationDto> getAllOrganizations() {
         return organizationService.getAllOrganizations();
     }

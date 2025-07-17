@@ -16,6 +16,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/actuator/**").hasAuthority("ROLE_contract.admin")
                         .requestMatchers("/contracts/**").hasAnyAuthority("ROLE_contract.user", "ROLE_contract.admin")
                         .requestMatchers("/organizations/**").hasAnyAuthority("ROLE_contract.user", "ROLE_contract.admin")
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
