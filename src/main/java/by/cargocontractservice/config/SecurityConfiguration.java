@@ -13,9 +13,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/contracts/**").authenticated()
-                        .requestMatchers("/organizations/**").authenticated()
+                        .requestMatchers("/actuator/**").hasAuthority("ROLE_contract.admin")
+                        .requestMatchers("/contracts/**").hasAnyAuthority("ROLE_contract.user", "ROLE_contract.admin")
+                        .requestMatchers("/organizations/**").hasAnyAuthority("ROLE_contract.user", "ROLE_contract.admin")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
