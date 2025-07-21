@@ -14,7 +14,7 @@ public class SecurityConfiguration {
         httpSecurity
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**").hasAuthority("ROLE_contract.admin")
-                        .requestMatchers("/contracts/**").hasAnyAuthority("ROLE_contract.user", "ROLE_contract.admin")
+                        .requestMatchers("/contracts/**").hasAnyAuthority("ROLE_contract.user", "ROLE_contract.admin", "ROLE_contract.role_internal_access")
                         .requestMatchers("/organizations/**").hasAnyAuthority("ROLE_contract.user", "ROLE_contract.admin")
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
