@@ -4,11 +4,19 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
+
+    @Value("${spring.security.oauth2.client.provider.keycloak.token-uri}")
+    private String TOKEN_URL;
+
+    @Value("${spring.security.oauth2.client.provider.keycloak.authorization-uri")
+    private String AUTH_URL;
+
     @Bean
     public OpenAPI customOpenAPI() {
         Scopes scopes = new Scopes();
@@ -22,8 +30,8 @@ public class OpenApiConfig {
                                 .type(SecurityScheme.Type.OAUTH2)
                                 .flows(new OAuthFlows()
                                         .authorizationCode(new OAuthFlow()
-                                                .authorizationUrl("http://localhost:8080/realms/logistic-realm/protocol/openid-connect/auth")
-                                                .tokenUrl("http://localhost:8080/realms/logistic-realm/protocol/openid-connect/token")
+                                                .authorizationUrl(AUTH_URL)
+                                                .tokenUrl(TOKEN_URL)
                                                 .scopes(scopes)
                                         )
                                 )
