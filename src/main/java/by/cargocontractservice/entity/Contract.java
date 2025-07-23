@@ -25,9 +25,7 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Organization customer;
+    private String customerName;
 
     private String loadingInfo;
 

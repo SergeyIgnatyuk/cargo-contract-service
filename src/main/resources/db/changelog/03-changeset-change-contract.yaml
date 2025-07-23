@@ -1,14 +1,22 @@
 databaseChangeLog:
   - changeSet:
-      id: create-organization-02
+      id: change-contract-01
       author: sergey_ignatyuk
       dbms: postgresql
       preConditions:
         - onFail: MARK_RAN
         - columnExists:
-                tableName: contract
-                columnName: process_id
-      changes:
-        - dropColumn:
             tableName: contract
-            columnName: process_id
+            columnName: customer_id
+      changes:
+        - renameColumn:
+            tableName: contract
+            oldColumnName: customer_id
+            newColumnName: customer_name
+        - modifyDataType:
+            tableName: contract
+            columnName: customer_name
+            newDataType: text
+        - addNotNullConstraint:
+            tableName: contract
+            columnName: customer_name

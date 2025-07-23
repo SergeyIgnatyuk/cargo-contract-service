@@ -105,6 +105,31 @@ services:
       retries: 5
       start_period: 20s
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: logistic-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./src/main/resources/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - backend
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: logistic-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    networks:
+      - backend
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
   # Сервисы Spring Cloud
   logistic-configserver:
     image: sergeyignatyuk/logistic-configserver:latest
@@ -252,3 +277,4 @@ volumes:
   keycloakstorage:
   zoostorage:
   kafkastorage:
+  grafana-storage:

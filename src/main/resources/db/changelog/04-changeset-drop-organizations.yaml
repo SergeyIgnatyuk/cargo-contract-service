@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: drop-organizations-01
+      author: sergey_ignatyuk
+      dbms: postgresql
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: organization
+      changes:
+        - dropTable:
+            tableName: organization

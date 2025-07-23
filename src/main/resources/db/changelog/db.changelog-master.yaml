@@ -8,3 +8,6 @@ databaseChangeLog:
   - include:
       file: 03-changeset-change-contract.yaml
       relativeToChangelogFile: true
+  - include:
+      file: 04-changeset-drop-organizations.yaml
+      relativeToChangelogFile: true
