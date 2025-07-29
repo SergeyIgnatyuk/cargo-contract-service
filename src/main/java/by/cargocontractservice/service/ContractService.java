@@ -3,12 +3,12 @@ package by.cargocontractservice.service;
 import by.cargocontractservice.client.LogisticBpClient;
 import by.cargocontractservice.client.OrganizationsClient;
 import by.cargocontractservice.dto.ContractDto;
-import by.cargocontractservice.dto.OrganizationDto;
 import by.cargocontractservice.entity.Contract;
 import by.cargocontractservice.enums.Status;
 import by.cargocontractservice.event.KafkaMessageProducer;
 import by.cargocontractservice.mapper.ContractMapper;
 import by.cargocontractservice.repository.ContractRepository;
+import by.logisticspec.model.OrganizationDto;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class ContractService {
         Contract contract = contractMapper.toContract(contractDto);
         String customerName = contractDto.getCustomerName();
 
-        OrganizationDto organizationDto = organizationsClient.getOrganizationByName(customerName);
+        OrganizationDto organizationDto = organizationsClient.getOrganizationByName(customerName).getBody();
         if (organizationDto == null) {
             organizationsClient.createOrganization(OrganizationDto.builder()
                     .name(customerName)
